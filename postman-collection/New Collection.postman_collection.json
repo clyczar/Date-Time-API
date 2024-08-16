@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "633b094b-b4b0-4113-bbdf-e00c4c2fb03f",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16538792"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/api/date",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "start_date",
+						"value": "2024-01-01",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_date",
+							"value": "2024-08-01",
+							"type": "default"
+						},
+						{
+							"key": "second_date",
+							"value": "2024-08-11",
+							"type": "default"
+						},
+						{
+							"key": "type",
+							"value": "WeekDays",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/date",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"date"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
