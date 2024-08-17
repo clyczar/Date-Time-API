@@ -101,21 +101,21 @@ class DateTimeController extends Controller
 
         $days_difference = $interval->days;
 
-        $hoursDifference = $days_difference * 24 + $interval->h;
+        $hours_difference = $days_difference * 24 + $interval->h;
 
-        $minutesDifference = $hoursDifference * 60 + $interval->i;
+        $minutes_difference = $hours_difference * 60 + $interval->i;
 
-        $secondsDifference = $minutesDifference * 60 + $interval->s;
+        $seconds_difference = $minutes_difference * 60 + $interval->s;
 
-        $yearsDifference = $interval->y;
+        $years_difference = $interval->y;
 
         switch($this->convert)
 		{
 			case 'DAYS' : return $days_difference;
-			case 'HOURS' : return $hoursDifference;
-			case 'MINITES' : return $minutesDifference;
-			case 'SECONDS' : return $secondsDifference;
-			case 'YEARS' : return $yearsDifference;
+			case 'HOURS' : return $hours_difference;
+			case 'MINITES' : return $minutes_difference;
+			case 'SECONDS' : return $seconds_difference;
+			case 'YEARS' : return $years_difference;
 			default: return $days_difference;
 		}
         // Get the number of days
@@ -134,18 +134,18 @@ class DateTimeController extends Controller
             $second_date = $temp;
         }
         
-        $weekdaysDifference = 0;
+        $weekdays_difference = 0;
         
         while ($first_date <= $second_date) {
             // Check if the current day is a weekday (Monday to Friday)
             if ($first_date->format('N') < 6) { // 'N' returns the day of the week as a number (1 for Monday, 7 for Sunday)
-                $weekdaysDifference++;
+                $weekdays_difference++;
             }
             // Move to the next day
             $first_date->modify('+1 day');
         }
         
-        return $weekdaysDifference;
+        return $weekdays_difference;
     }
 
     public function calculateNumberOfWeeks()
