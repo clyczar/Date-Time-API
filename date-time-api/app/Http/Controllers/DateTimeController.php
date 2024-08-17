@@ -28,15 +28,26 @@ class DateTimeController extends Controller
 
         $this->load_basic_parameters_from_request($request);
 
-        switch(strtoupper($this->type))
+        switch($this->type)
 		{
 			case 'DAYS' : $result = $this->calculateNumberOfDays();break;
 			case 'WEEKDAYS' :  $result = $this->calculateNumberOfWeekDays();break;
 			case 'WEEKS' :  $result = $this->calculateNumberOfWeeks();break;
 			default:  $result = $this->calculateNumberOfDays();
 		}
+        $return_data = [
+            'status' => true,
+            'code' => 200,
+            "First Date" => $this->first_date,
+            "First Date Timezone" => $this->first_date_timezone,
+            "Second Date" => $this->second_date,
+            "Second Date Timezone" => $this->second_date_timezone,
+            "Request Type" => $this->type,
+            "Result Convert To" => $this->convert,
+            "Time difference" => $result
+        ];
 
-        return response()->json($result,422);
+        return response()->json($return_data,200);
     }
 
     public function validate_dates_from_request($request)
@@ -70,61 +81,77 @@ class DateTimeController extends Controller
 
     public function load_basic_parameters_from_request($request)
     { 
-        $this->first_date = strtotime($request->first_date);
-        $this->second_date = strtotime($request->second_date);
-        $this->first_date_timezone = !empty($request->first_date_timezone) ? $request->first_date_timezone : "Europe/London";
+        $this->first_date = $request->first_date;
+        $this->second_date = $request->second_date;
+        $this->first_date_timezone = !empty($request->first_date_timezone) ? $request->first_date_timezone : "Australia/Adelaide";
         $this->second_date_timezone = !empty($request->second_date_timezone) ? $request->second_date_timezone : "Europe/London";
-        $this->time_difference = $request->time_difference;
-        $this->type = $request->type;
-        $this->convert = $request->convert;
+        $this->type = strtoupper($request->type);
+        $this->convert = strtoupper($request->convert);
     }
 
     public function calculateNumberOfDays($convert_to=null){
-       
-        $first_date = new DateTime();
-        $first_date->setTimestamp($this->first_date);
-        $first_date->setTimezone(new DateTimeZone($this->first_date_timezone));
-        
-        $second_date = new DateTime();
-        $second_date->setTimestamp($this->second_date);
-        $second_date->setTimezone(new DateTimeZone($this->second_date_timezone));
+        $first_date_timezone = new DateTimeZone($this->first_date_timezone);
+        $first_date = new DateTime($this->first_date, $first_date_timezone);
 
+        $second_date_timezone = new DateTimeZone($this->second_date_timezone);
+        $second_date = new DateTime($this->second_date, $second_date_timezone);
+        
         // Calculate the difference
         $interval = $first_date->diff($second_date);
-        
+
+        $days_difference = $interval->days;
+
+        $hoursDifference = $days_difference * 24 + $interval->h;
+
+        $minutesDifference = $hoursDifference * 60 + $interval->i;
+
+        $secondsDifference = $minutesDifference * 60 + $interval->s;
+
+        $yearsDifference = $interval->y;
+
+        switch($this->convert)
+		{
+			case 'DAYS' : return $days_difference;
+			case 'HOURS' : return $hoursDifference;
+			case 'MINITES' : return $minutesDifference;
+			case 'SECONDS' : return $secondsDifference;
+			case 'YEARS' : return $yearsDifference;
+			default: return $days_difference;
+		}
         // Get the number of days
-        $days = $interval->days;
-        return $days;
     }
 
     public function calculateNumberOfWeekDays(){
-        $timestamp1 = $this->first_date;
-        $timestamp2 = $this->second_date;
+        $first_date_timezone = new DateTimeZone($this->first_date_timezone);
+        $first_date = new DateTime($this->first_date, $first_date_timezone);
+
+        $second_date_timezone = new DateTimeZone($this->second_date_timezone);
+        $second_date = new DateTime($this->second_date, $second_date_timezone);
         
-        if ($timestamp1 > $timestamp2) {
-            $temp = $timestamp1;
-            $timestamp1 = $timestamp2;
-            $timestamp2 = $temp;
+        if ($first_date > $second_date) {
+            $temp = $first_date;
+            $first_date = $second_date;
+            $second_date = $temp;
         }
         
-        $weekdaysCount = 0;
+        $weekdaysDifference = 0;
         
-        for ($current = $timestamp1; $current <= $timestamp2; $current += 86400) {
-            $dayOfWeek = date('N', $current);
-            
-            if ($dayOfWeek < 6) {
-                $weekdaysCount++;
+        while ($first_date <= $second_date) {
+            // Check if the current day is a weekday (Monday to Friday)
+            if ($first_date->format('N') < 6) { // 'N' returns the day of the week as a number (1 for Monday, 7 for Sunday)
+                $weekdaysDifference++;
             }
+            // Move to the next day
+            $first_date->modify('+1 day');
         }
         
-        return $weekdaysCount;
+        return $weekdaysDifference;
     }
 
     public function calculateNumberOfWeeks()
     {
         $datediff = $this->calculateNumberOfDays();        
         $number_of_weeks = floor($datediff / 7);
-        
         return $number_of_weeks;
     }
 }
