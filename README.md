@@ -6,7 +6,17 @@ To run this project successfully, you need
   2. open extension=fileinfo in php.ini
   3. Composer
 
-Steps:
-  1. composer install --no-scripts
-  2. php artisan serve
-  3. download the date-time-api collection from postman-collection folder and import to postman to do the testing.
+Start the serve:
+  1. cd date-time-api 
+  2. composer install --no-scripts
+  3. php artisan serve
+
+Download the date-time-api collection from postman-collection folder and import to postman to do the testing.
+
+Test:
+  1. cd date-time-api 
+  2. php artisan test
+
+Feature Improvement:
+  1. using xml as request body if there are more request parameters.
+  2. add authentication function, such as using hash_hmac function and preshared key

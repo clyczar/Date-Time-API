@@ -44,7 +44,7 @@ class DateTimeController extends Controller
             "Second Date Timezone" => $this->second_date_timezone,
             "Request Type" => $this->type,
             "Result Convert To" => $this->convert,
-            "Time difference" => $result
+            "Time difference" => ($this->convert =="")? $result." ".$this->type : $result." ".$this->convert
         ];
 
         return response()->json($return_data,200);

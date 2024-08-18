@@ -23,18 +23,33 @@
 					"formdata": [
 						{
 							"key": "first_date",
-							"value": "2024-08-01",
+							"value": "",
 							"type": "default"
 						},
 						{
 							"key": "second_date",
-							"value": "2024-08-11",
+							"value": "2024-08-02 01:00:00",
 							"type": "default"
 						},
 						{
 							"key": "type",
-							"value": "WeekDays",
+							"value": "days",
 							"type": "default"
+						},
+						{
+							"key": "first_date_timezone",
+							"value": "Australia/Adelaide",
+							"type": "text"
+						},
+						{
+							"key": "second_date_timezone",
+							"value": "Australia/Sydney",
+							"type": "text"
+						},
+						{
+							"key": "convert",
+							"value": "MINITES",
+							"type": "text"
 						}
 					]
 				},
