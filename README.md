@@ -3,7 +3,7 @@ This is an API to calculate the days between time period.
 
 ## Project requirement
 To run this project successfully, you need 
-  1. PHP 8.2
+  1. PHP 8.3
   2. open extension=fileinfo in php.ini
   3. Composer
 
